@@ -26,7 +26,6 @@ moment = Moment(app)
 app.config.from_object('config')
 
 # TODO: connect to a local postgresql database
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://postgres:1234@localhost:5432/todo_database'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']= False
 
 db = SQLAlchemy(app)
@@ -35,48 +34,7 @@ migrate = Migrate(app, db)
 #----------------------------------------------------------------------------#
 # Models.
 #----------------------------------------------------------------------------#
-
-class Venue(db.Model):
-    __tablename__ = 'Venue'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String())
-    city = db.Column(db.String(120))
-    state = db.Column(db.String(120))
-    address = db.Column(db.String(120))
-    phone = db.Column(db.String(120))
-    genres = db.Column(db.String(120))
-    image_link = db.Column(db.String(500))
-    facebook_link = db.Column(db.String(120))
-    shows = db.relationship('Show', backref="Venue", lazy=True, cascade = 'save-update')
-
-    def __repr__(self):
-      return f'<Venue {self.id} {self.name}>'
-
-class Artist(db.Model):
-    __tablename__ = 'Artist'
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String)
-    city = db.Column(db.String(120))
-    state = db.Column(db.String(120))
-    phone = db.Column(db.String(120))
-    genres = db.Column(db.String(120))
-    image_link = db.Column(db.String(500))
-    facebook_link = db.Column(db.String(120))
-    website = db.Column(db.String(120))
-    seeking_venue = db.Column(db.Boolean)
-    seeking_description = db.Column(db.String(300))
-    shows = db.relationship('Show', backref="Artist", lazy=True, cascade = 'save-update')
-    def __repr__(self):
-      return f'<Artist {self.id} {self.name}>'
-
-class Show(db.Model):
-    __tablename__ = 'Show'
-    id = db.Column(db.Integer, primary_key=True)
-    artist_id = db.Column(db.Integer, db.ForeignKey('Artist.id'), nullable=False)
-    venue_id = db.Column(db.Integer, db.ForeignKey('Venue.id'), nullable=False)
-    start_time = db.Column(db.DateTime, nullable=False)
-    def __repr__(self):
-        return f'<Show {self.id}>'
+from models import *
 
 #----------------------------------------------------------------------------#
 # Filters.
@@ -175,7 +133,10 @@ def create_venue_submission():
     genres = request.form.getlist('genres')
     image_link = request.form.get('image_link')
     facebook_link = request.form.get('facebook_link')
-    venue = Venue(name=name,city=city,state=state,phone=phone,genres=genres,image_link=image_link,facebook_link=facebook_link)   ##create new artist to put in database
+    website = request.form.get('website')
+    seeking_talent = True if 'seeking_talent' in request.form else False
+    seeking_description = request.form.get('seeking_description')
+    venue = Venue(name=name,city=city,state=state,phone=phone,genres=genres,image_link=image_link,facebook_link=facebook_link,website=website,seeking_talent=seeking_talent,seeking_description=seeking_description)   ##create new artist to put in database
     db.session.add(venue)      ## pending 
     db.session.commit()       ## persistance
   except: 
@@ -308,7 +269,6 @@ def create_artist_submission():
     state = request.form.get('state')
     phone = request.form.get('phone')
     genres = request.form.getlist('genres')
-    print(type(genres))
     image_link = request.form.get('image_link')
     facebook_link = request.form.get('facebook_link')
     website = request.form.get('website')

@@ -22,7 +22,8 @@
     </div>
     <div class="form-group" id="phone">
       <label for="phone">Phone</label>
-      {{ form.phone(class_ = 'form-control', placeholder='xxx-xxx-xxxx', autofocus = true) }}
+      <input class="form-control" type="tel" pattern="^\d{3}-\d{3}-\d{4}$" placeholder="xxx-xxx-xxxx" name="phone"> 
+      <small>format is: xxx-xxx-xxxx</small>
     </div>
     <div class="form-group" id="genres">
       <label for="genres">Genres</label>
@@ -32,17 +33,19 @@
 
     <div class="form-group" id="facebook_link">
       <label for="facebook_link">Facebook Link</label>
-      {{ form.facebook_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+      <input class="form-control" type="url" placeholder='http://' name="facebook_link" >
+      <small>format is: http(s)://www.example.com</small>
     </div>
     <div class="form-group" id="website">
       <label for="website">Website Link</label>
-      {{ form.website(class_ = 'form-control', placeholder='http://', autofocus = true) }}
+      <input class="form-control" type="url" placeholder='http://' name="website" >
+      <small>format is: http(s)://www.example.com</small>
     </div>
     <div class="form-group" id="image_link">
       <label for="image_link">Image Link</label>
       {{ form.image_link(class_ = 'form-control', placeholder='http://', autofocus = true) }}
     </div>
-    <div class="form-group" id="city">
+    <div class="form-group" id="seeking_venue">
       <label for="seeking_venue">Seeking venue</label>
       <input type="checkbox" name="seeking_venue" class="seeking_venue" value="yes" checked>
     </div>

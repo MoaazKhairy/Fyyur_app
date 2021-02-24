@@ -1,7 +1,8 @@
 from datetime import datetime
 from flask_wtf import Form
 from wtforms import StringField, SelectField, SelectMultipleField, DateTimeField, BooleanField
-from wtforms.validators import DataRequired, AnyOf, URL
+from wtforms.validators import DataRequired, AnyOf, URL, Regexp, ValidationError
+
 class ShowForm(Form):
     artist_id = StringField(
         'artist_id'
@@ -82,10 +83,12 @@ class VenueForm(Form):
         'address', validators=[DataRequired()]
     )
     phone = StringField(
-        'phone'
+        'phone', validators=[DataRequired(), Regexp("^[0-9]*$", message="Phone number should only contain digits")]
+
     )
+
     image_link = StringField(
-        'image_link'
+        'image_link', validators=[URL()]
     )
     genres = SelectMultipleField(
         # TODO implement enum restriction
@@ -115,7 +118,16 @@ class VenueForm(Form):
     facebook_link = StringField(
         'facebook_link', validators=[URL()]
     )
+    website = StringField(
+        'website', validators=[URL()]
+    )
+    seeking_talent = BooleanField(
+        'seeking_talent'
+    )
+    seeking_description = StringField(
+        'seeking_description'
 
+    )
 class ArtistForm(Form):
     name = StringField(
         'name', validators=[DataRequired()]
@@ -180,8 +192,10 @@ class ArtistForm(Form):
         ]
     )
     phone = StringField(
-        # TODO implement validation logic for state
-        'phone', validators=[DataRequired()]
+        'phone', validators=[ DataRequired(),
+                                Regexp("^[0-9]*$",
+                                message="Phone number must contain digits only")
+                            ]
     )
     image_link = StringField(
         'image_link', validators=[URL()]
